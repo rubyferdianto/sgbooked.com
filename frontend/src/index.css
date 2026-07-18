@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --nus-blue: #003d7c;
+  --nus-orange: #ef7c00;
+  --surface: #f5f8fc;
+  --surface-strong: #e8f0f8;
+  --white: #ffffff;
+  --text-strong: #10243a;
+  --text-subtle: #5b6a7b;
+  --border: rgba(0, 61, 124, 0.12);
+  --shadow: 0 20px 40px rgba(7, 31, 58, 0.08);
+  --sans: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+  --heading: 'Space Grotesk', 'Segoe UI', sans-serif;
+
+  color: var(--text-strong);
+  background:
+    radial-gradient(circle at top right, rgba(239, 124, 0, 0.14), transparent 28%),
+    linear-gradient(180deg, #f8fbff 0%, #edf3f8 100%);
+  font: 16px/1.55 var(--sans);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+#root {
+  width: min(1440px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 24px 0 48px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--heading);
+  color: var(--text-strong);
+}
+
+h1 {
+  font-size: clamp(3rem, 5vw, 4.75rem);
+  line-height: 0.98;
+  letter-spacing: -0.06em;
+}
+
+h2 {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+h3 {
+  font-size: 1.18rem;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+@media (max-width: 720px) {
+  #root {
+    width: min(100% - 20px, 1440px);
+    padding-top: 16px;
+  }
+}

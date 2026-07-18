@@ -1,0 +1,3 @@
+sgbooked.mail.from=sgbooked@gmail.com
+spring.mail.username=sgbooked@gmail.com
+spring.mail.password=your-google-app-password
