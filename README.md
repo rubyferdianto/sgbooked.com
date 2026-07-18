@@ -47,8 +47,6 @@ The default backend URL is `http://localhost:8080` and the frontend expects the 
 
 ## Demo admin account
 
-- Username: `ADMIN`
-- Password: `ADMIN`
 
 ## SMTP configuration
 

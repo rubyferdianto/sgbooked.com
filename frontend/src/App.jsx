@@ -629,8 +629,7 @@ function App() {
                 </button>
                 {isAdmin && (
                   <p className="muted copy-block">
-                    Admin controls can release the seating plan for customers. Demo admin:
-                    ADMIN / ADMIN
+                    Admin controls can release the seating plan for customers.  
                   </p>
                 )}
               </div>
