@@ -47,7 +47,7 @@ public final class AppModels {
 	public record UserResponse(String fullName, String email, Role role) {
 	}
 
-	public record ChallengeTile(int tileNumber, int ballCount, boolean highlighted) {
+	public record ChallengeTile(int tileNumber, String imageUrl, boolean highlighted) {
 	}
 
 	public record HumanChallengeResponse(String challengeId, String prompt, List<ChallengeTile> tiles) {
@@ -59,7 +59,10 @@ public final class AppModels {
 	public record VerifyHumanRequest(String pendingToken, String challengeId, int answer) {
 	}
 
-	public record AuthCompleteResponse(String message, String token, UserResponse user) {
+	public record ChangePasswordRequest(String currentPassword, String newPassword) {
+	}
+
+	public record AuthCompleteResponse(String token, UserResponse user) {
 	}
 
 	public record ReleaseSeatsRequest(boolean released) {

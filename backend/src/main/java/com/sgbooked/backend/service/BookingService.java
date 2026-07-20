@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,10 +38,6 @@ import com.sgbooked.backend.model.AppModels.ZoneType;
 
 import jakarta.annotation.PostConstruct;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
 @Service
 public class BookingService {
 
@@ -63,11 +62,11 @@ public class BookingService {
 
 	@PostConstruct
 	void initializeVenue() {
-		zoneDefinitions.put("FESTIVAL", new ZoneDefinition("FESTIVAL", "Festival", "",   "#EF7C00", ZoneType.STANDING, 300, 98, "FST"));
-		zoneDefinitions.put("VIP", new ZoneDefinition("VIP", "VIP",  "","#004B8D", ZoneType.SEATED, 100, 288, "VIP"));
-		zoneDefinitions.put("GROUP1", new ZoneDefinition("GROUP1", "Group 1", "", "#1D6FB8", ZoneType.SEATED, 200, 188, "G1"));
-		zoneDefinitions.put("GROUP2_LEFT", new ZoneDefinition("GROUP2_LEFT", "Group 2 Left", "", "#69A8D8", ZoneType.SEATED, 500, 128, "L"));
-		zoneDefinitions.put("GROUP2_RIGHT", new ZoneDefinition("GROUP2_RIGHT", "Group 2 Right", "", "#FFB14C", ZoneType.SEATED, 500, 128, "R"));
+		zoneDefinitions.put("FESTIVAL", new ZoneDefinition("FESTIVAL", "Festival", "", "#64748b", ZoneType.STANDING, 300, 98, "FST"));
+		zoneDefinitions.put("VIP", new ZoneDefinition("VIP", "VIP", "", "#d97706", ZoneType.SEATED, 100, 288, "VIP"));
+		zoneDefinitions.put("GROUP1", new ZoneDefinition("GROUP1", "Group 1", "", "#7c3aed", ZoneType.SEATED, 200, 188, "G1"));
+		zoneDefinitions.put("GROUP2_LEFT", new ZoneDefinition("GROUP2_LEFT", "Group 2 Left", "", "#0f766e", ZoneType.SEATED, 500, 128, "L"));
+		zoneDefinitions.put("GROUP2_RIGHT", new ZoneDefinition("GROUP2_RIGHT", "Group 2 Right", "", "#2563eb", ZoneType.SEATED, 500, 128, "R"));
 
 		zoneDefinitions.values().forEach(this::seedZone);
 	}

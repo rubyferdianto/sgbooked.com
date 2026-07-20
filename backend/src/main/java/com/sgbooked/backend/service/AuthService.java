@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,21 +17,19 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.sgbooked.backend.model.AppModels.AuthCompleteResponse;
+import com.sgbooked.backend.model.AppModels.ChangePasswordRequest;
 import com.sgbooked.backend.model.AppModels.HumanChallengeResponse;
 import com.sgbooked.backend.model.AppModels.LoginRequest;
 import com.sgbooked.backend.model.AppModels.PendingAuthResponse;
 import com.sgbooked.backend.model.AppModels.PendingAuthSession;
 import com.sgbooked.backend.model.AppModels.RegisterRequest;
 import com.sgbooked.backend.model.AppModels.Role;
+import com.sgbooked.backend.model.AppModels.StandardMessageResponse;
 import com.sgbooked.backend.model.AppModels.UserAccount;
 import com.sgbooked.backend.model.AppModels.UserResponse;
 import com.sgbooked.backend.model.AppModels.VerifyHumanRequest;
 
 import jakarta.annotation.PostConstruct;
-
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Service
 public class AuthService {
@@ -55,8 +56,18 @@ public class AuthService {
 				UUID.randomUUID().toString(),
 				"SGBooked Admin",
 				adminEmail,
-				passwordEncoder.encode("ADMIN"),
+				passwordEncoder.encode("admin1234567890!"),
 				Role.ADMIN));
+
+		String user1Email = "user1@sgbooked.local";
+		usersByEmail.put(
+			user1Email,
+			new UserAccount(
+				UUID.randomUUID().toString(),
+				"USER1",
+				user1Email,
+				passwordEncoder.encode("user1234567890!"),
+				Role.USER));
 	}
 
 	public PendingAuthResponse register(RegisterRequest request) {
@@ -119,7 +130,6 @@ public class AuthService {
 		activeSessions.put(token, account);
 
 		return new AuthCompleteResponse(
-			"Verification complete. Welcome to sgbooked.",
 			token,
 			toUserResponse(account));
 	}
@@ -147,6 +157,32 @@ public class AuthService {
 
 	public UserAccount requireCustomer(String authorizationHeader) {
 		return requireSession(authorizationHeader);
+	}
+
+	public synchronized StandardMessageResponse changePassword(String authorizationHeader, ChangePasswordRequest request) {
+		UserAccount account = requireSession(authorizationHeader);
+		String currentPassword = requireText(request.currentPassword(), "Current password is required.");
+		String nextPassword = requirePassword(request.newPassword());
+
+		if (!passwordEncoder.matches(currentPassword, account.passwordHash())) {
+			throw new ResponseStatusException(UNAUTHORIZED, "Current password is incorrect.");
+		}
+
+		if (passwordEncoder.matches(nextPassword, account.passwordHash())) {
+			throw new ResponseStatusException(BAD_REQUEST, "New password must be different from current password.");
+		}
+
+		UserAccount updatedAccount = new UserAccount(
+			account.userId(),
+			account.fullName(),
+			account.email(),
+			passwordEncoder.encode(nextPassword),
+			account.role());
+
+		usersByEmail.put(updatedAccount.email(), updatedAccount);
+		activeSessions.replaceAll((token, value) -> value.email().equals(updatedAccount.email()) ? updatedAccount : value);
+
+		return new StandardMessageResponse("Password changed successfully.", false);
 	}
 
 	private PendingAuthResponse createPendingAuth(UserAccount account, String message) {
@@ -180,6 +216,10 @@ public class AuthService {
 
 		if ("ADMIN".equalsIgnoreCase(normalized)) {
 			return "admin@sgbooked.local";
+		}
+		
+		if ("USER1".equalsIgnoreCase(normalized)) {
+			return "user1@sgbooked.local";
 		}
 
 		return normalized.toLowerCase(Locale.ROOT);
